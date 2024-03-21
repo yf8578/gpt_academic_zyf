@@ -31,7 +31,7 @@ def Get_Pubmed(keyword, chatbot, history):
     keyword = keyword
     print("keyword:", keyword)
     # keyword="sepsis"
-    num_of_articles = 5
+    num_of_articles = 10
     print("step4 fetch articles")
     fetch = PubMedFetcher()
     # get the  PMID for first 3 articles with keyword sepsis
@@ -54,6 +54,7 @@ def Get_Pubmed(keyword, chatbot, history):
     for pmid in pmids:
         print(pmid)
         Pmid_dict[pmid] = pmid
+        print(fetch.article_by_pmid(pmid))
         articles[pmid] = fetch.article_by_pmid(pmid)
         titles[pmid] = articles[pmid].title
         abstracts[pmid] = articles[pmid].abstract
@@ -127,7 +128,7 @@ def PubMed小助手(
     chatbot.append(
         [
             "函数插件功能？",
-            "分析用户提供的PubMed关键词相关文章：binary-husky，插件初始化中...",
+            "分析用户提供的PubMed关键词相关文章：ZYF，插件初始化中...",
         ]
     )
     yield from update_ui(chatbot=chatbot, history=history)  # 刷新界面
@@ -183,7 +184,7 @@ def PubMed小助手(
         if len(meta_paper_info_list[:batchsize]) > 0:
             i_say = (
                 "下面是一些学术文献的数据，提取出以下内容："
-                + "1、英文题目；2、中文题目翻译；3、作者；4、发表在哪个Volume；4、引用数量（cite）；5、中文摘要翻译；6、发表年份；7、Pubmed对应链接"
+                + "1、英文题目；2、根据相关的生物医学知识，将题目翻译成英文；3、作者；4、发表在哪个Volume；4、引用数量（cite）；5、根据相关的生物医学知识，将abstract翻译成中文；6、发表年份；7、Pubmed对应链接"
                 + f"以下是信息源：{str(meta_paper_info_list[:batchsize])}"
             )
 
