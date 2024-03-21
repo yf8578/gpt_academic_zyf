@@ -1,4 +1,14 @@
 """
+Author: zhangyifan1
+Date: 2024-03-20 10:44:35
+LastEditors: zhangyifan1 zhangyifan1@genomics.cn
+LastEditTime: 2024-03-21 19:32:13
+FilePath: //gpt_academic_zyf//tests//test_plugins.py
+Description: 
+
+"""
+
+"""
 对项目中的各个插件进行测试。运行方法：直接运行 python tests/test_plugins.py
 """
 
@@ -14,7 +24,6 @@ def validate_path():
 
 
 validate_path()  # 返回项目根路径
-
 if __name__ == "__main__":
     from tests.test_utils import plugin_test
 
@@ -22,10 +31,15 @@ if __name__ == "__main__":
 
     # plugin_test(plugin='crazy_functions.Latex输出PDF->Latex翻译中文并重新编译PDF', main_input="2307.07522")
 
-    plugin_test(
-        plugin="crazy_functions.Latex输出PDF->Latex翻译中文并重新编译PDF",
-        main_input="G:/SEAFILE_LOCAL/50503047/我的资料库/学位/paperlatex/aaai/Fu_8368_with_appendix",
-    )
+    # plugin_test(
+    #     plugin="crazy_functions.Latex输出PDF->Latex翻译中文并重新编译PDF",
+    #     main_input="G:/SEAFILE_LOCAL/50503047/我的资料库/学位/paperlatex/aaai/Fu_8368_with_appendix",
+    # )
+
+    # plugin_test(
+    #     plugin="crazy_functions.PubMed小助手->PubMed小助手",
+    #     main_input="sepsis",
+    # )
 
     # plugin_test(plugin='crazy_functions.虚空终端->虚空终端', main_input='修改api-key为sk-jhoejriotherjep')
 
@@ -45,7 +59,10 @@ if __name__ == "__main__":
 
     # plugin_test(plugin='crazy_functions.批量翻译PDF文档_多线程->批量翻译PDF文档', main_input='crazy_functions/test_project/pdf_and_word/aaai.pdf')
 
-    # plugin_test(plugin='crazy_functions.谷歌检索小助手->谷歌检索小助手', main_input="https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=auto+reinforcement+learning&btnG=")
+    plugin_test(
+        plugin="crazy_functions.谷歌检索小助手->谷歌检索小助手",
+        main_input="https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=auto+reinforcement+learning&btnG=",
+    )
 
     # plugin_test(plugin='crazy_functions.总结word文档->总结word文档', main_input="crazy_functions/test_project/pdf_and_word")
 
