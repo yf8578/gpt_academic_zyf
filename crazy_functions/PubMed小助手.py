@@ -24,185 +24,144 @@ from toolbox import (
     write_history_to_file,
 )
 
-print("pubmed小助手起始")
+# print("pubmed小助手起始")
 
 
-# #####
-# #####多线程
-# def fetch_article(pmid, fetcher):
-#     try:
-#         print(f"Fetching article for PMID {pmid}")
-#         article = fetcher.article_by_pmid(pmid)
-#         print(f"Got article for PMID {pmid}")
-#         return {
-#             "pmid": pmid,
-#             "title": article.title,
-#             "abstract": article.abstract,
-#             "authors": article.authors,
-#             "journal": article.journal,
-#             "citation": article.citation,
-#             "year": article.year,
-#             "issue": article.issue,
-#             "link": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
-#             "doi": article.doi,
-#         }
-#     except ReadTimeout:
-#         print(f"Request timed out: Could not retrieve article info for PMID {pmid}.")
-#     except MetaPubError as e:
-#         print(
-#             f"MetaPub error: {e}. This could be due to non-existent PMID {pmid} or other issues."
-#         )
-
-
-# def Get_Pubmed(keyword, chatbot, history):
-#     print("Starting PubMed helper")
-#     num_of_articles = 1
-#     print("Fetching articles")
-#     fetch = PubMedFetcher()
-#     print("Fetching...")
-#     print("Keyword:", keyword)
-#     pmids = fetch.pmids_for_query(keyword, retmax=num_of_articles)
-#     print("Fetch complete")
-#     print(pmids)
-#     print("Iterating over PMIDs")
-
-#     articles_info = []
-#     # Use ThreadPoolExecutor to fetch articles in parallel
-#     with ThreadPoolExecutor(max_workers=5) as executor:
-#         # Create a future for each article fetch
-#         future_to_pmid = {
-#             executor.submit(fetch_article, pmid, fetch): pmid for pmid in pmids
-#         }
-#         # As each future completes, process its result
-#         for future in as_completed(future_to_pmid):
-#             pmid = future_to_pmid[future]
-#             try:
-#                 article_info = future.result()
-#                 if article_info:
-#                     articles_info.append(article_info)
-#                     print(f"Completed search for PMID {pmid}")
-#                     # Update chatbot UI here if necessary
-#             except Exception as exc:
-#                 print(f"PMID {pmid} generated an exception: {exc}")
-
-#     # Return or process articles_info as needed
-#     yield articles_info
-
-
-# # def Get_Pubmed(keyword, num_of_articels, chatbot, history):
+##test
 def Get_Pubmed(keyword, chatbot, history):
     from metapub import PubMedFetcher
 
-    print("step3 PubMed小助手 开始运行")
-    # initialise the keyword to be searched and number of articles to be retrieved
-    keyword = keyword
-    # keyword="sepsis"
-    num_of_articles = 5
-    print("step4 fetch articles")
     fetch = PubMedFetcher()
-    print("fetching...")
-    print("keyword:", keyword)
-    # get the  PMID for first 3 articles with keyword sepsis
+    num_of_articles = 15
     pmids = fetch.pmids_for_query(keyword, retmax=num_of_articles)
-    print("step5 fetch done")
     print(pmids)
-    # get  articles
-    articles = {}
-    titles = {}
-    abstracts = {}
-    authors = {}
-    journals = {}
-    citation = {}
-    years = {}
-    issues = {}
-    Pmid_dict = {}
-    links = {}
-    doi = {}
-    print("step6 遍历pmids")
-
-    #     for pmid in pmids:
-    #         try:
-    #             print("step6.1 开始遍历")
-    #             article = fetch.article_by_pmid(pmid)
-    #             print("step6.2 获取文章")
-    #             article_info = {
-    #                 "pmid": pmid,
-    #                 "title": article.title,
-    #                 "abstract": article.abstract,
-    #                 "authors": article.authors,
-    #                 "journal": article.journal,
-    #                 "citation": article.citation,
-    #                 "year": article.year,
-    #                 "issue": article.issue,
-    #                 "link": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
-    #                 "doi": article.doi,
-    #             }
-    #             print(pmid)
-    #             chatbot[-1] = [chatbot[-1][0], pmid + f"完成搜索！！"]
-    #             # 注意：这里应该直接调用 update_ui 而不是使用 yield from，因为这不是在生成器中
-    #             update_ui(chatbot=chatbot, history=[])
-    #         except ReadTimeout:
-    #             print(f"请求超时：无法获取PMID {pmid} 的文章信息。")
-    #         except MetaPubError as e:
-    #             print(f"遇到MetaPub错误：{e}。可能是PMID {pmid} 不存在或其他问题。")
-
-    #         return article_info
-
-    ######
-    # 修改前
-    #######
+    cnt = 1
     for pmid in pmids:
         print(pmid)
-        Pmid_dict[pmid] = pmid
-        print(fetch.article_by_pmid(pmid))
-        articles[pmid] = fetch.article_by_pmid(pmid)
-        titles[pmid] = articles[pmid].title
-        abstracts[pmid] = articles[pmid].abstract
-        authors[pmid] = articles[pmid].authors
-        journals[pmid] = articles[pmid].journal
-        citation[pmid] = articles[pmid].citation
-        years[pmid] = articles[pmid].year
-        issues[pmid] = articles[pmid].issue
-        links[pmid] = "https://pubmed.ncbi.nlm.nih.gov/" + pmid + "/"
-        doi[pmid] = articles[pmid].doi
-        # print("step7 doi获取完成，下一步是更新ui")
-        # chatbot[-1] = [chatbot[-1][0], pmid + f"完成搜索！！"]
-        # yield update_ui(chatbot=chatbot, history=[])
+        article_info = {}
+        try:
+            article = fetch.article_by_pmid(pmid)
+            article_info = {
+                "pmid": pmid,
+                "Title": article.title,
+                "Abstract": article.abstract,
+                "Author": article.authors,
+                "Journal": article.journal,
+                "Citation": article.citation,
+                "Year": article.year,
+                "Issue": article.issue,
+                "Link": "https://pubmed.ncbi.nlm.nih.gov/" + pmid + "/",
+                "Doi": article.doi,
+            }
+            chatbot[-1] = [
+                chatbot[-1][0],
+                f"Successfully fetched article with PMID {pmid}, {cnt}/{num_of_articles}",
+            ]
+            cnt += 1
+            # yield from update_ui(chatbot=chatbot, history=[])
+        except Exception as e:
+            chatbot[-1] = [
+                chatbot[-1][0],
+                f"Error fetching article with PMID {pmid}: {e}, {cnt}/{num_of_articles}",
+            ]
+            yield from update_ui(chatbot=chatbot, history=[])
+            cnt += 1
+            continue
 
-    # create a dataframe
-    # Pmid=pd.DataFrame(list(Pmid_dict.items()),columns = ['pmid','pmid'])
-    Title = pd.DataFrame(list(titles.items()), columns=["pmid", "Title"])
-    Abstract = pd.DataFrame(list(abstracts.items()), columns=["pmid", "Abstract"])
-    Author = pd.DataFrame(list(authors.items()), columns=["pmid", "Author"])
-    Journal = pd.DataFrame(list(journals.items()), columns=["pmid", "Journal"])
-    Citation = pd.DataFrame(list(citation.items()), columns=["pmid", "Citation"])
-    Year = pd.DataFrame(list(years.items()), columns=["pmid", "Year"])
-    Volume = pd.DataFrame(list(years.items()), columns=["pmid", "Volume"])
-    Issue = pd.DataFrame(list(issues.items()), columns=["pmid", "Issue"])
-    Link = pd.DataFrame(list(links.items()), columns=["pmid", "Link"])
-    Doi = pd.DataFrame(list(doi.items()), columns=["pmid", "Doi"])
-    data_frames = [
-        Title,
-        Abstract,
-        Author,
-        Year,
-        Volume,
-        Issue,
-        Journal,
-        Citation,
-        Link,
-        Doi,
-    ]
-    from functools import reduce
+        yield article_info  # Yield the information of one article at a time
 
-    df_merged = reduce(
-        lambda left, right: pd.merge(left, right, on=["pmid"], how="outer"),
-        data_frames,
-    )
-    profile = df_merged.to_dict("records")
-    # yield from update_ui(chatbot=chatbot, history=[]) # 刷新界面
-    print("step4 PubMed小助手 获取信息完成")
-    return profile
+
+# #####注释起始
+# # # def Get_Pubmed(keyword, num_of_articels, chatbot, history):
+# def Get_Pubmed(keyword, chatbot, history):
+#     from metapub import PubMedFetcher
+
+#     print("step3 PubMed小助手 开始运行")
+#     # initialise the keyword to be searched and number of articles to be retrieved
+#     keyword = keyword
+#     # keyword="sepsis"
+#     num_of_articles = 5
+#     print("step4 fetch articles")
+#     fetch = PubMedFetcher()
+#     print("fetching...")
+#     print("keyword:", keyword)
+#     # get the  PMID for first 3 articles with keyword sepsis
+#     pmids = fetch.pmids_for_query(keyword, retmax=num_of_articles)
+#     print("step5 fetch done")
+#     print(pmids)
+#     # get  articles
+#     articles = {}
+#     titles = {}
+#     abstracts = {}
+#     authors = {}
+#     journals = {}
+#     citation = {}
+#     years = {}
+#     issues = {}
+#     Pmid_dict = {}
+#     links = {}
+#     doi = {}
+#     cnt = 0
+#     print("step6 遍历pmids")
+
+#     ######
+#     # 修改前
+#     #######
+#     for pmid in pmids:
+#         print(pmid)
+#         Pmid_dict[pmid] = pmid
+#         print(fetch.article_by_pmid(pmid))
+#         articles[pmid] = fetch.article_by_pmid(pmid)
+#         titles[pmid] = articles[pmid].title
+#         abstracts[pmid] = articles[pmid].abstract
+#         authors[pmid] = articles[pmid].authors
+#         journals[pmid] = articles[pmid].journal
+#         citation[pmid] = articles[pmid].citation
+#         years[pmid] = articles[pmid].year
+#         issues[pmid] = articles[pmid].issue
+#         links[pmid] = "https://pubmed.ncbi.nlm.nih.gov/" + pmid + "/"
+#         doi[pmid] = articles[pmid].doi
+#         cnt += 1
+#         # chatbot[-1]=[chatbot[-1][0],f"正在获取第{cnt}篇文章信息"]
+#         # # print("step7 doi获取完成，下一步是更新ui")
+#         # # chatbot[-1] = [chatbot[-1][0], pmid + f"完成搜索！！"]
+#         # yield from update_ui(chatbot=chatbot, history=[])
+
+#     # create a dataframe
+#     # Pmid=pd.DataFrame(list(Pmid_dict.items()),columns = ['pmid','pmid'])
+#     Title = pd.DataFrame(list(titles.items()), columns=["pmid", "Title"])
+#     Abstract = pd.DataFrame(list(abstracts.items()), columns=["pmid", "Abstract"])
+#     Author = pd.DataFrame(list(authors.items()), columns=["pmid", "Author"])
+#     Journal = pd.DataFrame(list(journals.items()), columns=["pmid", "Journal"])
+#     Citation = pd.DataFrame(list(citation.items()), columns=["pmid", "Citation"])
+#     Year = pd.DataFrame(list(years.items()), columns=["pmid", "Year"])
+#     Volume = pd.DataFrame(list(years.items()), columns=["pmid", "Volume"])
+#     Issue = pd.DataFrame(list(issues.items()), columns=["pmid", "Issue"])
+#     Link = pd.DataFrame(list(links.items()), columns=["pmid", "Link"])
+#     Doi = pd.DataFrame(list(doi.items()), columns=["pmid", "Doi"])
+#     data_frames = [
+#         Title,
+#         Abstract,
+#         Author,
+#         Year,
+#         Volume,
+#         Issue,
+#         Journal,
+#         Citation,
+#         Link,
+#         Doi,
+#     ]
+#     from functools import reduce
+
+#     df_merged = reduce(
+#         lambda left, right: pd.merge(left, right, on=["pmid"], how="outer"),
+#         data_frames,
+#     )
+#     profile = df_merged.to_dict("records")
+#     # yield from update_ui(chatbot=chatbot, history=[]) # 刷新界面
+#     print("step4 PubMed小助手 获取信息完成")
+#     return profile
+# #######注释结束
 
 
 def PubMed小助手(
@@ -256,49 +215,33 @@ def PubMed小助手(
 
     # 清空历史，以免输入溢出
     history = []
-    # meta_paper_info_list = yield from Get_Pubmed(
-    #     keyword,
-    #     # num_of_articels,
-    #     chatbot,
-    #     history,
-    # )
     print("step2 PubMed小助手 调用Get_Pubmed获取信息")  # 到这里也正常
-    meta_paper_info_list = []
 
-    # # 调用 Get_Pubmed 生成器，并处理每篇文章的信息
-    # for article_info in Get_Pubmed(keyword, chatbot, history):
-    #     # 这里可以对每篇文章的信息进行处理，例如添加到列表中
-    #     meta_paper_info_list.append(article_info)
-    # meta_paper_info_list = yield from Get_Pubmed(
+    ###test
+    meta_paper_info_list = []
+    for article_info in Get_Pubmed(keyword, chatbot, history):
+        meta_paper_info_list.append(article_info)
+        yield from update_ui(chatbot=chatbot, history=[])
+
+    # ###注释起始
+    # meta_paper_info_list = []
+    # meta_paper_info_list = Get_Pubmed(
     #     keyword,
     #     # num_of_articels,
     #     chatbot,
     #     history,
     # )
-    meta_paper_info_list = Get_Pubmed(
-        keyword,
-        # num_of_articels,
-        chatbot,
-        history,
-    )
+    # ###注释结束
 
-    # if len(meta_paper_info_list) == 0:
-    #     yield from update_ui_lastest_msg(
-    #         lastmsg="获取文献失败，可能触发了反爬机制。",
-    #         chatbot=chatbot,
-    #         history=history,
-    #         delay=0,
-    #     )
-    #     return
     batchsize = 5
     for batch in range(math.ceil(len(meta_paper_info_list) / batchsize)):
         if len(meta_paper_info_list[:batchsize]) > 0:
             i_say = (
-                "下面是一些学术文献的数据，提取出以下内容："
-                + "1、英文题目；2、根据相关的生物医学知识，将题目翻译成英文；3、作者；4、发表在哪个Volume；4、引用数量（cite）；5、根据相关的生物医学知识，将abstract翻译成中文；6、发表年份；7、Pubmed对应链接"
+                "下面是一些学术文献的数据，提取出以下内容，并且必须将其整合到一张表格上输出，必须按照下面的顺序："
+                + "1、英文题目；2、根据相关的生物医学知识，将题目翻译成英文；3、作者；4、根据相关的生物医学知识，必须将abstract翻译成中文；5、发表年份；6、Pubmed对应链接"
                 + f"以下是信息源：{str(meta_paper_info_list[:batchsize])}"
             )
-
+            # 4、发表在哪个Volume；4、引用数量（cite）；
             inputs_show_user = (
                 f"请分析此关键词：{keyword}相关的文章信息，这是第{batch+1}批"
             )
