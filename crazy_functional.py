@@ -48,12 +48,19 @@ def get_crazy_functions():
     from crazy_functions.虚空终端 import 虚空终端
     from crazy_functions.生成多种Mermaid图表 import 生成多种Mermaid图表
     from crazy_functions.PubMed小助手 import PubMed小助手
+    from crazy_functions.Local_plant_genome import 植物基因组
 
     function_plugins = {
+        "植物基因组": {
+            "Group": "学术",
+            "Color": "stop",
+            "AsButton": True,  #
+            "Function": HotReload(植物基因组),
+        },
         "PubMed小助手(输入需要检索的Keywords)": {
             "Group": "学术",
             "Color": "stop",
-            "AsButton": True,  # 加入下拉菜单中
+            "AsButton": True,
             "Info": "输入需要在PubMed中检索的Keywords",
             "Function": HotReload(PubMed小助手),
         },
