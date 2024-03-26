@@ -1,4 +1,6 @@
 > [!IMPORTANT]
+> 2024.3.27：本地知识库插件跑通，中间修改了一点代码，运行过程中会自动下载配置文件，默认路径在```C:\Users\zhangyifan1\AppData\Roaming\nltk_data```中，打包放在others里  
+>![image](https://github.com/yf8578/gpt_academic_zyf/assets/71922803/c95c3c99-7dc2-4a00-ac01-d1765ed2f373)  
 > 2024.3.21: Pubmed小助手插件完成，默认一次获取15篇文章，代码里面可以修改。  
 > 2024.3.21: 添加PubMed小助手插件，慢慢debug吧，老阔疼🤦  
 > 2024.3.11: 恭迎Claude3和Moonshot，全力支持Qwen、GLM、DeepseekCoder等中文大语言模型！  
