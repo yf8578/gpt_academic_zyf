@@ -1,8 +1,8 @@
 """
 Author: zhangyifan1
-Date: 2024-03-21 15:09:37
+Date: 2024-03-27 14:42:02
 LastEditors: zhangyifan1 zhangyifan1@genomics.cn
-LastEditTime: 2024-03-22 10:55:50
+LastEditTime: 2024-03-27 17:19:12
 FilePath: //gpt_academic_zyf//crazy_functions//PubMed小助手.py
 Description: 
 
@@ -32,7 +32,7 @@ def Get_Pubmed(keyword, chatbot, history):
     from metapub import PubMedFetcher
 
     fetch = PubMedFetcher()
-    num_of_articles = 15
+    num_of_articles = 5
     pmids = fetch.pmids_for_query(keyword, retmax=num_of_articles)
     print(pmids)
     cnt = 1
@@ -69,99 +69,6 @@ def Get_Pubmed(keyword, chatbot, history):
             continue
 
         yield article_info  # Yield the information of one article at a time
-
-
-# #####注释起始
-# # # def Get_Pubmed(keyword, num_of_articels, chatbot, history):
-# def Get_Pubmed(keyword, chatbot, history):
-#     from metapub import PubMedFetcher
-
-#     print("step3 PubMed小助手 开始运行")
-#     # initialise the keyword to be searched and number of articles to be retrieved
-#     keyword = keyword
-#     # keyword="sepsis"
-#     num_of_articles = 5
-#     print("step4 fetch articles")
-#     fetch = PubMedFetcher()
-#     print("fetching...")
-#     print("keyword:", keyword)
-#     # get the  PMID for first 3 articles with keyword sepsis
-#     pmids = fetch.pmids_for_query(keyword, retmax=num_of_articles)
-#     print("step5 fetch done")
-#     print(pmids)
-#     # get  articles
-#     articles = {}
-#     titles = {}
-#     abstracts = {}
-#     authors = {}
-#     journals = {}
-#     citation = {}
-#     years = {}
-#     issues = {}
-#     Pmid_dict = {}
-#     links = {}
-#     doi = {}
-#     cnt = 0
-#     print("step6 遍历pmids")
-
-#     ######
-#     # 修改前
-#     #######
-#     for pmid in pmids:
-#         print(pmid)
-#         Pmid_dict[pmid] = pmid
-#         print(fetch.article_by_pmid(pmid))
-#         articles[pmid] = fetch.article_by_pmid(pmid)
-#         titles[pmid] = articles[pmid].title
-#         abstracts[pmid] = articles[pmid].abstract
-#         authors[pmid] = articles[pmid].authors
-#         journals[pmid] = articles[pmid].journal
-#         citation[pmid] = articles[pmid].citation
-#         years[pmid] = articles[pmid].year
-#         issues[pmid] = articles[pmid].issue
-#         links[pmid] = "https://pubmed.ncbi.nlm.nih.gov/" + pmid + "/"
-#         doi[pmid] = articles[pmid].doi
-#         cnt += 1
-#         # chatbot[-1]=[chatbot[-1][0],f"正在获取第{cnt}篇文章信息"]
-#         # # print("step7 doi获取完成，下一步是更新ui")
-#         # # chatbot[-1] = [chatbot[-1][0], pmid + f"完成搜索！！"]
-#         # yield from update_ui(chatbot=chatbot, history=[])
-
-#     # create a dataframe
-#     # Pmid=pd.DataFrame(list(Pmid_dict.items()),columns = ['pmid','pmid'])
-#     Title = pd.DataFrame(list(titles.items()), columns=["pmid", "Title"])
-#     Abstract = pd.DataFrame(list(abstracts.items()), columns=["pmid", "Abstract"])
-#     Author = pd.DataFrame(list(authors.items()), columns=["pmid", "Author"])
-#     Journal = pd.DataFrame(list(journals.items()), columns=["pmid", "Journal"])
-#     Citation = pd.DataFrame(list(citation.items()), columns=["pmid", "Citation"])
-#     Year = pd.DataFrame(list(years.items()), columns=["pmid", "Year"])
-#     Volume = pd.DataFrame(list(years.items()), columns=["pmid", "Volume"])
-#     Issue = pd.DataFrame(list(issues.items()), columns=["pmid", "Issue"])
-#     Link = pd.DataFrame(list(links.items()), columns=["pmid", "Link"])
-#     Doi = pd.DataFrame(list(doi.items()), columns=["pmid", "Doi"])
-#     data_frames = [
-#         Title,
-#         Abstract,
-#         Author,
-#         Year,
-#         Volume,
-#         Issue,
-#         Journal,
-#         Citation,
-#         Link,
-#         Doi,
-#     ]
-#     from functools import reduce
-
-#     df_merged = reduce(
-#         lambda left, right: pd.merge(left, right, on=["pmid"], how="outer"),
-#         data_frames,
-#     )
-#     profile = df_merged.to_dict("records")
-#     # yield from update_ui(chatbot=chatbot, history=[]) # 刷新界面
-#     print("step4 PubMed小助手 获取信息完成")
-#     return profile
-# #######注释结束
 
 
 def PubMed小助手(
@@ -237,7 +144,7 @@ def PubMed小助手(
     for batch in range(math.ceil(len(meta_paper_info_list) / batchsize)):
         if len(meta_paper_info_list[:batchsize]) > 0:
             i_say = (
-                "下面是一些学术文献的数据，提取出以下内容，并且必须将其整合到一张表格上输出，必须按照下面的顺序："
+                "下面是一些学术文献的数据，提取出以下内容，并且必须将其整合到一张表格上输出，必须按照下面的顺序,全部输出，不要省略："
                 + "1、英文题目；2、根据相关的生物医学知识，将题目翻译成英文；3、作者；4、根据相关的生物医学知识，必须将abstract翻译成中文；5、发表年份；6、Pubmed对应链接"
                 + f"以下是信息源：{str(meta_paper_info_list[:batchsize])}"
             )
@@ -251,7 +158,7 @@ def PubMed小助手(
                 llm_kwargs=llm_kwargs,
                 chatbot=chatbot,
                 history=[],
-                sys_prompt="你是一个学术翻译，请从数据中提取信息。你必须使用Markdown表格。你必须逐个文献进行处理。",
+                sys_prompt="你是一个学术翻译,请从数据中提取信息。你必须使用Markdown表格。你必须逐个文献进行处理。",
             )
 
             history.extend([f"第{batch+1}批", gpt_say])
